@@ -76,11 +76,11 @@ The C<$token> option is the access token from Slack to use. This may be either o
 
 =item *
 
-L<https://api.slack.com/tokens|User Token>. This is a token to perform actions on behalf of a user account.
+L<User Token|https://api.slack.com/tokens>. This is a token to perform actions on behalf of a user account.
 
 =item *
 
-L<https://slack.com/services/new/bot|Bot Token>. If you configure a bot integration, you may use the access token on the bot configuration page to use this library to act on behalf of the bot account. Bot accounts may not have the same features as a user account, so please be sure to read the Slack documentation to understand any differences or limitations.
+L<Bot Token|https://slack.com/services/new/bot>. If you configure a bot integration, you may use the access token on the bot configuration page to use this library to act on behalf of the bot account. Bot accounts may not have the same features as a user account, so please be sure to read the Slack documentation to understand any differences or limitations.
 
 =back
 
@@ -161,7 +161,7 @@ sub start {
 
     method metadata() returns HashRef
 
-The initial connection is established after calling the L<https://api.slack.com/methods/rtm.start|rtm.start> method on the web API. This returns some useful information, which is available here.
+The initial connection is established after calling the L<rtm.start|https://api.slack.com/methods/rtm.start> method on the web API. This returns some useful information, which is available here.
 
 This will only contain useful information I<after> L</start> is called.
 
@@ -188,7 +188,7 @@ sub quiet {
 
     method on($type, \&cb)
 
-This sets up a callback handler for the named message type. The available message types are available in the L<https://api.slack.com/events|Slack Events> documentation. Only one handler may be setup for each event. Setting a new handler with this method will replace any previously set handler. Events with no handler will be ignored/unhandled.
+This sets up a callback handler for the named message type. The available message types are available in the L<Slack Events|https://api.slack.com/events> documentation. Only one handler may be setup for each event. Setting a new handler with this method will replace any previously set handler. Events with no handler will be ignored/unhandled.
 
 =cut
 
