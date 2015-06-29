@@ -253,7 +253,7 @@ sub ping {
     my ($self, $msg) = @_;
 
     $self->send({ 
-        %$msg,
+        %{ $msg // {} },
         type => 'ping' 
     });
 }
