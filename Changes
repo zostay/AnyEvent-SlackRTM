@@ -1,0 +1,9 @@
+{{$NEXT}}
+
+    * Fixed a bug in ping where a call with no arguments would die, which was
+      especially critical since the API itself calls ping regularly to help keep
+      the connection alive (and/or notice when it is not). HT: jsime
+
+0.151570    June 6, 2015
+
+    * Initial release of base API.
