@@ -17,32 +17,36 @@ our $START_URL = 'https://slack.com/api/rtm.start';
 
     use AnyEvent;
     use AnyEvent::SlackRTM;
-    
+
+    my $access_token = "<user or bot token>";
+    my $channel_id = "<channel/group/DM id>";
+
     my $cond = AnyEvent->condvar;
     my $rtm = AnyEvent::SlackRTM->new($access_token);
 
-    my $c = 1;
+    my $i = 1;
     my $keep_alive;
     my $counter;
     $rtm->on('hello' => sub { 
         print "Ready\n";
 
         $keep_alive = AnyEvent->timer(interval => 60, cb => sub {
+            print "Ping\n";
             $rtm->ping;
         });
 
         $counter = AnyEvent->timer(interval => 5, cb => sub {
+            print "Send\n";
             $rtm->send({
                 type => 'message',
-                text => $i++, 
+                channel => $channel_id,
+                text => "".$i++, 
             });
         });
     });
     $rtm->on('message' => sub { 
         my ($rtm, $message) = @_;
-        if ($message->{ok}) {
-            print "> ", $message->{text};
-        }
+        print "> $message->{text}\n";
     });
     $rtm->on('finish' => sub { 
         print "Done\n";
