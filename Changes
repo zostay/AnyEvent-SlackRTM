@@ -1,5 +1,8 @@
 {{$NEXT}}
 
+    * Fixed the SYNOPSIS code. HT: robn
+    * Removed the dependency on AIO. HT: robn
+
 0.151800  2015-06-29 13:57:02CDT-0500 America/Chicago
 
     * Fixed a bug in ping where a call with no arguments would die, which was
