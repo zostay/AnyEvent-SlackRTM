@@ -1,5 +1,7 @@
 {{$NEXT}}
 
+    * Adding IO::Socket::SSL as a prereq. HT: shoichikaji
+
 0.152660  2015-09-23 10:39:17CDT-0500 America/Chicago
 
     * Fixed the SYNOPSIS code. HT: robn
