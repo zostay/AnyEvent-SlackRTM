@@ -27,7 +27,7 @@ our $START_URL = 'https://slack.com/api/rtm.start';
     my $i = 1;
     my $keep_alive;
     my $counter;
-    $rtm->on('hello' => sub { 
+    $rtm->on('hello' => sub {
         print "Ready\n";
 
         $keep_alive = AnyEvent->timer(interval => 60, cb => sub {
@@ -40,15 +40,15 @@ our $START_URL = 'https://slack.com/api/rtm.start';
             $rtm->send({
                 type => 'message',
                 channel => $channel_id,
-                text => "".$i++, 
+                text => "".$i++,
             });
         });
     });
-    $rtm->on('message' => sub { 
+    $rtm->on('message' => sub {
         my ($rtm, $message) = @_;
         print "> $message->{text}\n";
     });
-    $rtm->on('finish' => sub { 
+    $rtm->on('finish' => sub {
         print "Done\n";
         $cond->send;
     });
@@ -72,7 +72,7 @@ B<Disclaimer:> Note also that this API is subject to rate limits and any service
 
     method new($token)
 
-Constructs a L<AnyEvent::SlackRTM> object and returns it. 
+Constructs a L<AnyEvent::SlackRTM> object and returns it.
 
 The C<$token> option is the access token from Slack to use. This may be either of the following type of tokens:
 
@@ -256,9 +256,9 @@ This sends a ping message over the Slack RTM socket. You may add any paramters y
 sub ping {
     my ($self, $msg) = @_;
 
-    $self->send({ 
+    $self->send({
         %{ $msg // {} },
-        type => 'ping' 
+        type => 'ping'
     });
 }
 
