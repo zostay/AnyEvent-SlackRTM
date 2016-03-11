@@ -123,6 +123,8 @@ sub start {
     );
 
     my $res = $furl->get($START_URL . '?token=' . $self->{token});
+    croak "unable to start, Slack call failed: $res->{code} $res->{message}"
+        unless $res->{code} =~ m/^2/;
     my $start = decode_json($res->content);
 
     my $ok  = $start->{ok};
