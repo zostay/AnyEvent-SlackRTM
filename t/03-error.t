@@ -14,7 +14,7 @@ else {
     plan skip_all => 'No SLACK_TOKEN configured for testing.';
 }
 
-my $rtm = AnyEvent::SlackTRM->new($token . 'badtoken');
+my $rtm = AnyEvent::SlackRTM->new($token . 'badtoken');
 
 my $c = AnyEvent->condvar;
 try {
