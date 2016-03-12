@@ -123,7 +123,14 @@ sub start {
     );
 
     my $res = $furl->get($START_URL . '?token=' . $self->{token});
-    my $start = decode_json($res->content);
+    my $start = try {
+        decode_json($res->content);
+    }
+    catch {
+        my $status = $res->status;
+        my $message = $res->content;
+        croak "unable to start, Slack call failed: $status $message";
+    };
 
     my $ok  = $start->{ok};
     croak "unable to start, Slack returned an error: $start->{error}"
@@ -136,29 +143,29 @@ sub start {
     my $client = $self->{client};
 
     $client->connect($wss)->cb(sub {
-            my $client = shift;
+        my $client = shift;
 
-            my $conn = try {
-                $client->recv;
-            }
-            catch {
-                die $_;
-            };
+        my $conn = try {
+            $client->recv;
+        }
+        catch {
+            die $_;
+        };
 
-            $self->{started}++;
-            $self->{id} = 1;
+        $self->{started}++;
+        $self->{id} = 1;
 
-            $self->{conn} = $conn;
+        $self->{conn} = $conn;
 
-            $self->{pinger} = AnyEvent->timer(
-                after    => 60,
-                interval => 60,
-                cb       => sub { $self->ping },
-            );
+        $self->{pinger} = AnyEvent->timer(
+            after    => 60,
+            interval => 60,
+            cb       => sub { $self->ping },
+        );
 
-            $conn->on(each_message => sub { $self->_handle_incoming(@_) });
-            $conn->on(finish => sub { $self->_handle_finish(@_) });
-        });
+        $conn->on(each_message => sub { $self->_handle_incoming(@_) });
+        $conn->on(finish => sub { $self->_handle_finish(@_) });
+    });
 }
 
 =head2 metadata
@@ -265,7 +272,13 @@ sub ping {
 sub _handle_incoming {
     my ($self, $conn, $raw) = @_;
 
-    my $msg = decode_json($raw->body);
+    my $msg = try {
+        decode_json($raw->body);
+    }
+    catch {
+        my $message = $raw->body;
+        croak "unable to decode incoming message: $message";
+    };
 
     # Handle the initial hello
     if ($msg->{type} eq 'hello') {
