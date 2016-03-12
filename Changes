@@ -1,5 +1,8 @@
 {{$NEXT}}
 
+    * Adding better error handling for malformatted JSON in start and in
+      handling incoming WebSocket messages. HT: robn
+
 0.152750  2015-10-02 13:28:35CDT-0500 America/Chicago
 
     * Adding IO::Socket::SSL as a prereq. HT: shoichikaji
