@@ -1,5 +1,7 @@
 {{$NEXT}}
 
+0.160720  2016-03-11 23:08:09-06:00 America/Chicago
+
     * Adding better error handling for malformatted JSON in start and in
       handling incoming WebSocket messages. HT: robn
 
