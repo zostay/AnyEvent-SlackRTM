@@ -1,5 +1,8 @@
 {{$NEXT}}
 
+    * The on() method now allows multiple registrations with one call.
+    * The off() method now allows multiple deregistraitons with one call.
+
 0.160720  2016-03-11 23:08:09-06:00 America/Chicago
 
     * Adding better error handling for malformatted JSON in start and in

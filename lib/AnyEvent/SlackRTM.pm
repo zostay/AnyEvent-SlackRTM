@@ -197,28 +197,34 @@ sub quiet {
 
 =head2 on
 
-    method on($type, \&cb)
+    method on($type, \&cb, ...)
 
 This sets up a callback handler for the named message type. The available message types are available in the L<Slack Events|https://api.slack.com/events> documentation. Only one handler may be setup for each event. Setting a new handler with this method will replace any previously set handler. Events with no handler will be ignored/unhandled.
+
+You can specify multiple type/callback pairs to make multiple registrations at once.
 
 =cut
 
 sub on {
-    my ($self, $type, $cb) = @_;
-    $self->{registry}{$type} = $cb;
+    my ($self, %registrations) = @_;
+
+    for my $type (keys %registrations) {
+        my $cb = $registrations{ $type };
+        $self->{registry}{$type} = $cb;
+    }
 }
 
 =head2 off
 
-    method off($type)
+    method off(@types)
 
-This removes the handler for the named C<$type>.
+This removes the handler for the named C<@types>.
 
 =cut
 
 sub off {
-    my ($self, $type) = @_;
-    delete $self->{registry}{$type};
+    my ($self, @types) = @_;
+    delete $self->{registry}{$_} for @types;
 }
 
 sub _do {
