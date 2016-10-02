@@ -4,19 +4,24 @@ use v5.14;
 use Test::More;
 use AnyEvent;
 use AnyEvent::SlackRTM;
+use DDP;
 
 $SIG{__DIE__} = sub { warn @_; die @_ };
 
 my $token   = $ENV{SLACK_TOKEN};
 my $channel = $ENV{SLACK_CHANNEL};
 
-if ($token && $channel) {
+my $got_api = eval 'use WebService::Slack::WebApi; $WebService::Slack::WebApi::VERSION';
+undef $got_api if $@;
+
+if ($token && $channel && $got_api) {
     plan tests => 12;
 }
 else {
-    plan skip_all => 'SLACK_TOKEN and SLACK_CHANNEL must be configured for testing messaging.';
+    plan skip_all => 'SLACK_TOKEN and SLACK_CHANNEL must be configured and WebService::Slack::WebApi installed for testing API messaging.';
 }
 
+my $api = WebService::Slack::WebApi->new(token => $token);
 my $rtm = AnyEvent::SlackRTM->new($token);
 isa_ok($rtm, 'AnyEvent::SlackRTM');
 
@@ -26,11 +31,10 @@ $rtm->on('hello' => sub {
     is($_[1]{type}, 'hello', 'got hello');
     ok($rtm->said_hello, 'said hello');
 
-    $rtm->send({
-        type    => 'message',
+    $api->chat->post_message(
         channel => $channel,
         text    => 'I am <your> father!',
-    });
+    );
 });
 
 $rtm->on('message' => sub {
@@ -64,3 +68,4 @@ $rtm->on('finish' => sub {
 
 $rtm->start;
 $c->recv;
+
