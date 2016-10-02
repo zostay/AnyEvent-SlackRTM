@@ -365,4 +365,8 @@ This closes the WebSocket connection to the Slack RTM API.
 
 sub close { shift->{conn}->close }
 
+=head1 CAVEATS
+
+Slack parses, modifies, and entity encodes messages. Therefore, if you expect messages going in being the same coming out, you will be disappointed. You will want to make sure your implementation is able to handle entities like "&lt;" and "&gt;", for example.
+
 1;

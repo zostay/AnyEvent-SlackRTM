@@ -4,7 +4,6 @@ use v5.14;
 use Test::More;
 use AnyEvent;
 use AnyEvent::SlackRTM;
-use DDP;
 
 $SIG{__DIE__} = sub { warn @_; die @_ };
 
@@ -46,7 +45,7 @@ $rtm->on('message' => sub {
         return;
     }
     else {
-        is($_[1]{text}, "I am <your> father!", 'echo message returned');
+        is($_[1]{text}, "I am &lt;your&gt; father!", 'echo message returned');
         $rtm->ping({ echo => "That's impossible!" });
     }
 

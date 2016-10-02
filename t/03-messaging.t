@@ -42,7 +42,7 @@ $rtm->on('message' => sub {
         return;
     }
     else {
-        is($_[1]{text}, "I am <your> father!", 'echo message returned');
+        is($_[1]{text}, "I am &lt;your&gt; father!", 'echo message returned');
         $rtm->ping({ echo => "That's impossible!" });
     }
 
