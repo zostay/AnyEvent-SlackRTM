@@ -5,13 +5,16 @@ use Test::More;
 use AnyEvent;
 use AnyEvent::SlackRTM;
 
-$SIG{__DIE__} = sub { warn @_; die @_ };
-
 my $token   = $ENV{SLACK_TOKEN};
 my $channel = $ENV{SLACK_CHANNEL};
 
-my $got_api = eval 'use WebService::Slack::WebApi; $WebService::Slack::WebApi::VERSION';
-undef $got_api if $@;
+my $got_api;
+eval {
+    $got_api = eval 'use WebService::Slack::WebApi; $WebService::Slack::WebApi::VERSION';
+    undef $got_api if $@;
+};
+
+$SIG{__DIE__} = sub { warn @_; die @_ };
 
 if ($token && $channel && $got_api) {
     plan tests => 12;
