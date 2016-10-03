@@ -62,8 +62,6 @@ This provides an L<AnyEvent>-based interface to the L<Slack Real-Time Messaging 
 
 As of this writing, the library is still a fairly low-level experience, but more pieces may be automated or simplified in the future.
 
-B<Somewhat Experimental:> The API here is not set in stone yet, so watch for surprises if you upgrade.
-
 B<Disclaimer:> Note also that this API is subject to rate limits and any service limitations and fees associated with your Slack service. Please make sure you understand those limitations before using this library.
 
 =head1 METHODS
