@@ -49,6 +49,8 @@ $rtm->on('message' => sub {
 });
 
 $rtm->on('pong' => sub {
+    use DDP;
+    p @_;
     isa_ok($_[0], 'AnyEvent::SlackRTM');
     is($_[1]{type}, 'pong', 'got pong');
     is($_[1]{echo}, "That's impossible!", 'echo message returned');
