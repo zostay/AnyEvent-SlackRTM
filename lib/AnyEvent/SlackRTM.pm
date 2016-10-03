@@ -367,6 +367,10 @@ sub close { shift->{conn}->close }
 
 =head1 CAVEATS
 
-Slack parses, modifies, and entity encodes messages. Therefore, if you expect messages going in being the same coming out, you will be disappointed. You will want to make sure your implementation is able to handle entities like "&lt;" and "&gt;", for example.
+This is a low-level API. Therefore, this only aims to handle the basic message
+handling. You must make sure that any messages you send to Slack are formatted
+correctly. You must make sure any you receive are handled appropriately. Be sure
+to read the Slack documentation basic message formatting, attachment formatting,
+rate limits, etc.
 
 1;
