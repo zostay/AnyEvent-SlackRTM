@@ -17,7 +17,7 @@ eval {
 $SIG{__DIE__} = sub { warn @_; die @_ };
 
 if ($token && $channel && $got_api) {
-    plan tests => 12;
+    plan tests => 14;
 }
 else {
     plan skip_all => 'SLACK_TOKEN and SLACK_CHANNEL must be configured and WebService::Slack::WebApi installed for testing API messaging.';
