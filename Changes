@@ -1,5 +1,9 @@
 {{$NEXT}}
 
+    * Fixed a bug where errors weren't quieted when the quiet flag was set by
+      the developer.
+    * Fixed a bug where errors were always quieted because they weren't being
+      detected correctly.
     * Removed the experimental notice from the docs.
     * Added a CAVEATS section to the docs.
 

@@ -284,16 +284,22 @@ sub _handle_incoming {
         croak "unable to decode incoming message: $message";
     };
 
-    # Handle the initial hello
-    if ($msg->{type} eq 'hello') {
-        $self->_handle_hello($conn, $msg);
-    }
-    elsif ($msg->{type} eq 'error') {
+    # Handle errors when they occur
+    if ($msg->{error}) {
         $self->_handle_error($conn, $msg);
     }
+
+    # Handle the initial hello
+    elsif ($msg->{type} eq 'hello') {
+        $self->_handle_hello($conn, $msg);
+    }
+
+    # Periodic response to our pings
     elsif ($msg->{type} eq 'pong') {
         $self->_handle_pong($conn, $msg);
     }
+
+    # And anything else...
     else {
         $self->_handle_other($conn, $msg);
     }
@@ -328,6 +334,9 @@ sub _handle_error {
     my ($self, $conn, $msg) = @_;
 
     carp "Error #$msg->{error}{code}: $msg->{error}{msg}"
+        unless $self->{quiet};
+
+    $self->_do(error => $msg);
 }
 
 sub _handle_pong {
