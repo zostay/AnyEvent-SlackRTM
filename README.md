@@ -1,3 +1,7 @@
+[![Build Status](https://travis-ci.org/zostay/AnyEvent-SlackRTM.svg?branch=master)](https://travis-ci.org/zostay/AnyEvent-SlackRTM)
+[![GitHub issues](https://img.shields.io/github/issues/zostay/AnyEvent-SlackRTM.svg)](https://github.com/zostay/AnyEvent-SlackRTM/issues)
+[![Kwalitee status](http://cpants.cpanauthors.org/dist/AnyEvent-SlackRTM.png)](http://cpants.charsbar.org/dist/overview/AnyEvent-SlackRTM)
+
 # NAME
 
 AnyEvent::SlackRTM - AnyEvent module for interacting with the Slack RTM API
