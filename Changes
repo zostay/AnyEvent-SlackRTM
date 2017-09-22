@@ -1,5 +1,7 @@
 {{$NEXT}}
 
+1.0       2017-09-21 21:56:14-05:00 America/Chicago
+
     * Fixed a bug where errors weren't quieted when the quiet flag was set by
       the developer.
     * Fixed a bug where errors were always quieted because they weren't being
