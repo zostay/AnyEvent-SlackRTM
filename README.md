@@ -1,6 +1,7 @@
 [![Build Status](https://travis-ci.org/zostay/AnyEvent-SlackRTM.svg?branch=master)](https://travis-ci.org/zostay/AnyEvent-SlackRTM)
 [![GitHub issues](https://img.shields.io/github/issues/zostay/AnyEvent-SlackRTM.svg)](https://github.com/zostay/AnyEvent-SlackRTM/issues)
 [![Kwalitee status](http://cpants.cpanauthors.org/dist/AnyEvent-SlackRTM.png)](http://cpants.charsbar.org/dist/overview/AnyEvent-SlackRTM)
+[![Coverage Status](https://coveralls.io/repos/zostay/AnyEvent-SlackRTM/badge.svg?branch=master)](https://coveralls.io/r/zostay/AnyEvent-SlackRTM?branch=master)
 
 # NAME
 
@@ -8,7 +9,7 @@ AnyEvent::SlackRTM - AnyEvent module for interacting with the Slack RTM API
 
 # VERSION
 
-version 0.152660
+version 1.1
 
 # SYNOPSIS
 
@@ -24,7 +25,7 @@ version 0.152660
     my $i = 1;
     my $keep_alive;
     my $counter;
-    $rtm->on('hello' => sub { 
+    $rtm->on('hello' => sub {
         print "Ready\n";
 
         $keep_alive = AnyEvent->timer(interval => 60, cb => sub {
@@ -37,15 +38,15 @@ version 0.152660
             $rtm->send({
                 type => 'message',
                 channel => $channel_id,
-                text => "".$i++, 
+                text => "".$i++,
             });
         });
     });
-    $rtm->on('message' => sub { 
+    $rtm->on('message' => sub {
         my ($rtm, $message) = @_;
         print "> $message->{text}\n";
     });
-    $rtm->on('finish' => sub { 
+    $rtm->on('finish' => sub {
         print "Done\n";
         $cond->send;
     });
@@ -59,8 +60,6 @@ This provides an [AnyEvent](https://metacpan.org/pod/AnyEvent)-based interface t
 
 As of this writing, the library is still a fairly low-level experience, but more pieces may be automated or simplified in the future.
 
-**Somewhat Experimental:** The API here is not set in stone yet, so watch for surprises if you upgrade.
-
 **Disclaimer:** Note also that this API is subject to rate limits and any service limitations and fees associated with your Slack service. Please make sure you understand those limitations before using this library.
 
 # METHODS
@@ -69,7 +68,7 @@ As of this writing, the library is still a fairly low-level experience, but more
 
     method new($token)
 
-Constructs a [AnyEvent::SlackRTM](https://metacpan.org/pod/AnyEvent::SlackRTM) object and returns it. 
+Constructs a [AnyEvent::SlackRTM](https://metacpan.org/pod/AnyEvent::SlackRTM) object and returns it.
 
 The `$token` option is the access token from Slack to use. This may be either of the following type of tokens:
 
@@ -100,15 +99,17 @@ Normally, errors are sent to standard error. If this flag is set, that does not 
 
 ## on
 
-    method on($type, \&cb)
+    method on($type, \&cb, ...)
 
 This sets up a callback handler for the named message type. The available message types are available in the [Slack Events](https://api.slack.com/events) documentation. Only one handler may be setup for each event. Setting a new handler with this method will replace any previously set handler. Events with no handler will be ignored/unhandled.
 
+You can specify multiple type/callback pairs to make multiple registrations at once.
+
 ## off
 
-    method off($type)
+    method off(@types)
 
-This removes the handler for the named `$type`.
+This removes the handler for the named `@types`.
 
 ## send
 
@@ -140,13 +141,23 @@ Returns true after the "finish" message has been received from the server (meani
 
 This closes the WebSocket connection to the Slack RTM API.
 
+# CAVEATS
+
+This is a low-level API. Therefore, this only aims to handle the basic message
+handling. You must make sure that any messages you send to Slack are formatted
+correctly. You must make sure any you receive are handled appropriately. Be sure
+to read the Slack documentation basic message formatting, attachment formatting,
+rate limits, etc.
+
+1;
+
 # AUTHOR
 
-Andrew Sterling Hanenkamp &lt;hanenkamp@cpan.org>
+Andrew Sterling Hanenkamp <hanenkamp@cpan.org>
 
 # COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2015 by Qubling Software LLC.
+This software is copyright (c) 2017 by Qubling Software LLC.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
