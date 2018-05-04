@@ -5,7 +5,7 @@ use v5.14;
 # ABSTRACT: AnyEvent module for interacting with the Slack RTM API
 
 use AnyEvent;
-use AnyEvent::WebSocket::Client 0.12;
+use AnyEvent::WebSocket::Client 0.46;
 use Carp;
 use Furl;
 use JSON;
@@ -87,6 +87,8 @@ L<Bot Token|https://slack.com/services/new/bot>. If you configure a bot integrat
 =back
 
 The C<$client_opts> is an optional HashRef of L<AnyEvent::WebSocket::Client>'s configuration options, e.g. C<env_proxy>, C<max_payload_size>, C<timeout>, etc.
+If the C<env_proxy> option is passed,
+it is also used on the L<Furl> client used internally.
 
 =cut
 
@@ -104,9 +106,10 @@ sub new {
     };
 
     return bless {
-        token    => $token,
-        client   => $client,
-        registry => {},
+        token       => $token,
+        client      => $client,
+        client_opts => $client_opts,
+        registry    => {},
     }, $class;
 }
 
@@ -130,6 +133,7 @@ sub start {
         agent   => "AnyEvent::SlackRTM/$VERSION",
         timeout => $self->{client}->timeout,
     );
+    $furl->env_proxy if $self->{client_opts}->{env_proxy};
 
     my $res = $furl->get($START_URL . '?token=' . $self->{token});
     my $start = try {
