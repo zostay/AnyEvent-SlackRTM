@@ -123,7 +123,8 @@ which triggers every 15 seconds to send a C<ping> message
 if there hasn't been any activity in the past 10 seconds.
 The C<ping> will trigger a C<pong> response,
 so there should be at least one message every 15 seconds.
-This will disconnect if no messages have been received in the past 30 seconds.
+This will disconnect if no messages have been received in the past 30 seconds;
+however, it should trigger an automatic reconnect to keep the connection alive.
 
 =cut
 
@@ -155,6 +156,10 @@ sub start {
     # Store this stuff in case we want it
     $self->{metadata} = $start;
 
+    # We've now asked to re-open the connection,
+    # so don't close again on timeout.
+    delete $self->{closed};
+
     $self->{client}->connect( $start->{url} )->cb( sub {
         my $client = shift;
 
@@ -176,8 +181,9 @@ sub start {
                 my $now   = time;
                 my $since = $now - $self->{_last_keep_alive};
                 if ( $since > 30 ) {
+                    # will trigger a finish, which will reconnect
+                    # if $self->{closed} is not set.
                     $conn->close;
-                    $self->start;
                 }
                 elsif ( $since > 10 ) {
                     $self->ping( { keep_alive => $now } );
@@ -383,6 +389,8 @@ sub _handle_finish {
     $self->{finished}++;
 
     $self->_do('finish');
+
+    $self->start unless $self->{closed};
 }
 
 =head2 close
@@ -393,7 +401,11 @@ This closes the WebSocket connection to the Slack RTM API.
 
 =cut
 
-sub close { shift->{conn}->close }
+sub close {
+    my ($self) = @_;
+    $self->{closed}++;
+    $self->{conn}->close;
+}
 
 =head1 CAVEATS
 
