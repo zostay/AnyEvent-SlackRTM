@@ -66,7 +66,7 @@ As of this writing, the library is still a fairly low-level experience, but more
 
 ## new
 
-    method new($token)
+    method new($token, $client_opts)
 
 Constructs a [AnyEvent::SlackRTM](https://metacpan.org/pod/AnyEvent::SlackRTM) object and returns it.
 
@@ -74,6 +74,8 @@ The `$token` option is the access token from Slack to use. This may be either of
 
 - [User Token](https://api.slack.com/tokens). This is a token to perform actions on behalf of a user account.
 - [Bot Token](https://slack.com/services/new/bot). If you configure a bot integration, you may use the access token on the bot configuration page to use this library to act on behalf of the bot account. Bot accounts may not have the same features as a user account, so please be sure to read the Slack documentation to understand any differences or limitations.
+
+The `$client_opts` is an optional HashRef of [AnyEvent::WebSocket::Client](https://metacpan.org/pod/AnyEvent::WebSocket::Client)'s configuration options, e.g. `env_proxy`, `max_payload_size`, `timeout`, etc.
 
 ## start
 
@@ -157,7 +159,7 @@ Andrew Sterling Hanenkamp <hanenkamp@cpan.org>
 
 # COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2017 by Qubling Software LLC.
+This software is copyright (c) 2019 by Qubling Software LLC.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
