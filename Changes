@@ -1,5 +1,7 @@
 {{$NEXT}}
 
+1.1       2019-10-03 14:01:15-05:00 America/Chicago
+
     * Adding client options to constructor to allow options to be passed through
       to the underlying AnyEvent::WebSocket::Client connection. (HT: ibutorin)
 
