@@ -68,7 +68,7 @@ B<Disclaimer:> Note also that this API is subject to rate limits and any service
 
 =head2 new
 
-    method new($token)
+    method new($token, $client_opts)
 
 Constructs a L<AnyEvent::SlackRTM> object and returns it.
 
@@ -86,12 +86,22 @@ L<Bot Token|https://slack.com/services/new/bot>. If you configure a bot integrat
 
 =back
 
+The C<$client_opts> is an optional HashRef of L<AnyEvent::WebSocket::Client>'s configuration options, e.g. C<env_proxy>, C<max_payload_size>, C<timeout>, etc.
+
 =cut
 
 sub new {
-    my ($class, $token) = @_;
+    my ($class, $token, $client_opts) = @_;
 
-    my $client = AnyEvent::WebSocket::Client->new;
+    $client_opts //= {};
+    croak "Client options must be passed as a HashRef" unless ref $client_opts eq 'HASH';
+
+    my $client;
+    try {
+        $client = AnyEvent::WebSocket::Client->new(%$client_opts);
+    } catch {
+        croak "Can't create client object: $_";
+    };
 
     return bless {
         token    => $token,
