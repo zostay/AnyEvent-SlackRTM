@@ -127,7 +127,8 @@ sub start {
     $VERSION //= '*-devel';
 
     my $furl = Furl->new(
-        agent => "AnyEvent::SlackRTM/$VERSION",
+        agent   => "AnyEvent::SlackRTM/$VERSION",
+        timeout => $self->{client}->timeout,
     );
 
     my $res = $furl->get($START_URL . '?token=' . $self->{token});
