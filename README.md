@@ -9,7 +9,7 @@ AnyEvent::SlackRTM - AnyEvent module for interacting with the Slack RTM API
 
 # VERSION
 
-version 1.2
+version 1.3
 
 # SYNOPSIS
 
@@ -85,6 +85,14 @@ This will establish the WebSocket connection to the Slack RTM service.
 
 You should have registered any events using ["on"](#on) before doing this or you may miss some events that arrive immediately.
 
+Sets up a "keep alive" timer,
+which triggers every 15 seconds to send a `ping` message
+if there hasn't been any activity in the past 10 seconds.
+The `ping` will trigger a `pong` response,
+so there should be at least one message every 15 seconds.
+This will disconnect if no messages have been received in the past 30 seconds;
+however, it should trigger an automatic reconnect to keep the connection alive.
+
 ## metadata
 
     method metadata() returns HashRef
@@ -159,7 +167,7 @@ Andrew Sterling Hanenkamp <hanenkamp@cpan.org>
 
 # COPYRIGHT AND LICENSE
 
-This software is copyright (c) 2021 by Qubling Software LLC.
+This software is copyright (c) 2022 by Qubling Software LLC.
 
 This is free software; you can redistribute it and/or modify it under
 the same terms as the Perl 5 programming language system itself.
