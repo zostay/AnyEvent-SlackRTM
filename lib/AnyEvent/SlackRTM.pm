@@ -118,6 +118,14 @@ This will establish the WebSocket connection to the Slack RTM service.
 
 You should have registered any events using L</on> before doing this or you may miss some events that arrive immediately.
 
+Sets up a "keep alive" timer,
+which triggers every 15 seconds to send a C<ping> message
+if there hasn't been any activity in the past 10 seconds.
+The C<ping> will trigger a C<pong> response,
+so there should be at least one message every 15 seconds.
+This will disconnect if no messages have been received in the past 30 seconds;
+however, it should trigger an automatic reconnect to keep the connection alive.
+
 =cut
 
 sub start {
@@ -148,33 +156,41 @@ sub start {
     # Store this stuff in case we want it
     $self->{metadata} = $start;
 
-    my $wss    = $start->{url};
-    my $client = $self->{client};
+    # We've now asked to re-open the connection,
+    # so don't close again on timeout.
+    delete $self->{closed};
 
-    $client->connect($wss)->cb(sub {
+    $self->{client}->connect( $start->{url} )->cb( sub {
         my $client = shift;
 
-        my $conn = try {
-            $client->recv;
-        }
-        catch {
-            die $_;
-        };
-
+        delete $self->{finished};
         $self->{started}++;
         $self->{id} = 1;
 
-        $self->{conn} = $conn;
+        my $conn = $self->{conn} = $client->recv;
+        $conn->on( each_message => sub { $self->_handle_incoming(@_) } );
+        $conn->on( finish       => sub { $self->_handle_finish(@_) } );
 
-        $self->{pinger} = AnyEvent->timer(
-            after    => 60,
-            interval => 60,
-            cb       => sub { $self->ping },
+        my $started = localtime;
+        $self->{_last_keep_alive} = time;
+        $self->{keep_alive}       = AnyEvent->timer(
+            after    => 15,
+            interval => 15,
+            cb       => sub {
+                my $id    = $self->{id};
+                my $now   = time;
+                my $since = $now - $self->{_last_keep_alive};
+                if ( $since > 30 ) {
+                    # will trigger a finish, which will reconnect
+                    # if $self->{closed} is not set.
+                    $conn->close;
+                }
+                elsif ( $since > 10 ) {
+                    $self->ping( { keep_alive => $now } );
+                }
+            },
         );
-
-        $conn->on(each_message => sub { $self->_handle_incoming(@_) });
-        $conn->on(finish => sub { $self->_handle_finish(@_) });
-    });
+    } );
 }
 
 =head2 metadata
@@ -295,6 +311,8 @@ sub _handle_incoming {
         croak "unable to decode incoming message: $message";
     };
 
+    $self->{_last_keep_alive} = time;
+
     # Handle errors when they occur
     if ($msg->{error}) {
         $self->_handle_error($conn, $msg);
@@ -365,12 +383,14 @@ sub _handle_other {
 sub _handle_finish {
     my ($self, $conn) = @_;
 
-    # Cancel the pinger
-    undef $self->{pinger};
+    # Cancel the keep_alive watchdog
+    undef $self->{keep_alive};
 
     $self->{finished}++;
 
     $self->_do('finish');
+
+    $self->start unless $self->{closed};
 }
 
 =head2 close
@@ -381,7 +401,11 @@ This closes the WebSocket connection to the Slack RTM API.
 
 =cut
 
-sub close { shift->{conn}->close }
+sub close {
+    my ($self) = @_;
+    $self->{closed}++;
+    $self->{conn}->close;
+}
 
 =head1 CAVEATS
 
