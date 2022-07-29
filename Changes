@@ -1,6 +1,7 @@
 {{$NEXT}}
 
     * Switch from rtm.start to rtm.connect. (HT: @afresh1)
+    * Add keep-alive watchdog timer to keep the connection up. (HT: @afresh1)
 
 1.1       2019-10-03 14:01:15-05:00 America/Chicago
 
