@@ -18,6 +18,7 @@ jobs:
 
     steps:
     - uses: shogo82148/actions-setup-perl@v1
+      continue-on-error: true
       with:
         perl-version: ${{ matrix.perl }}
     - uses: actions/checkout@v2
