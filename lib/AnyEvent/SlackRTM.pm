@@ -11,7 +11,7 @@ use Furl;
 use JSON;
 use Try::Tiny;
 
-our $START_URL = 'https://slack.com/api/rtm.start';
+our $START_URL = 'https://slack.com/api/rtm.connect';
 
 =head1 SYNOPSIS
 
@@ -197,7 +197,9 @@ sub start {
 
     method metadata() returns HashRef
 
-The initial connection is established after calling the L<rtm.start|https://api.slack.com/methods/rtm.start> method on the web API. This returns some useful information, which is available here.
+The initial connection is established after calling the
+L<rtm.connect|https://api.slack.com/methods/rtm.connect> method on the web API.
+This returns some useful information, which is available here.
 
 This will only contain useful information I<after> L</start> is called.
 
