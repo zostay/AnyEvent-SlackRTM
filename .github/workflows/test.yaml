@@ -1,0 +1,31 @@
+---
+name: Test
+on:
+  push:
+
+jobs:
+  build:
+    name: Test
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        perl:
+        - "5.14"
+        - "5.20"
+        - "5.26"
+        - "5.32"
+        - "5.34"
+        - "5.36"
+
+    steps:
+    - uses: shogo82148/actions-setup-perl@v1
+      with:
+        perl-version: ${{ matrix.perl }}
+    - uses: actions/checkout@v2
+    - run: cpanm --notest --quiet Dist::Zilla Devel::Cover::Report::Coveralls
+    - run: dzil authordeps | cpanm --notest --quiet
+    - run: cpanm --notest --quiet Pod::Coverage::TrustPod WebService::Slack::WebApi
+    - run: dzil listdeps | cpanm --notest --quiet
+    - run: dzil test --release --verbose
+    - run: cover -test
+    - run: cover -report coveralls
