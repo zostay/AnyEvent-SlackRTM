@@ -97,7 +97,9 @@ however, it should trigger an automatic reconnect to keep the connection alive.
 
     method metadata() returns HashRef
 
-The initial connection is established after calling the [rtm.start](https://api.slack.com/methods/rtm.start) method on the web API. This returns some useful information, which is available here.
+The initial connection is established after calling the
+[rtm.connect](https://api.slack.com/methods/rtm.connect) method on the web API.
+This returns some useful information, which is available here.
 
 This will only contain useful information _after_ ["start"](#start) is called.
 
