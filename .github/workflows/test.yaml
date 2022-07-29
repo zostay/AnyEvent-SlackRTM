@@ -18,9 +18,10 @@ jobs:
 
     steps:
     - uses: shogo82148/actions-setup-perl@v1
-      continue-on-error: true
+      continue-on-error: ${{ matrix.continue }}
       with:
         perl-version: ${{ matrix.perl }}
+        continue: [true]
     - uses: actions/checkout@v2
     - run: cpanm --notest --quiet Dist::Zilla Devel::Cover::Report::Coveralls || (cat $HOME/.cpanm/work/*/build.log && exit 1)
     - run: dzil authordeps | cpanm --notest --quiet
@@ -29,3 +30,5 @@ jobs:
     - run: dzil test --release --verbose
     - run: cover -test
     - run: cover -report coveralls
+      env:
+        COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_TOKEN }}
