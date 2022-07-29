@@ -1,7 +1,7 @@
 ![Build Status](https://github.com/zostay/AnyEvent-SlackRTM/actions/workflows/test.yaml/badge.svg)
-![GitHub issues](https://img.shields.io/github/issues/zostay/AnyEvent-SlackRTM.svg)](https://github.com/zostay/AnyEvent-SlackRTM/issues)
-![Kwalitee status](https://cpants.cpanauthors.org/dist/AnyEvent-SlackRTM.png)](https://cpants.cpanauthors.org/dist/AnyEvent-SlackRTM)
-![Coverage Status](https://coveralls.io/repos/zostay/AnyEvent-SlackRTM/badge.svg?branch=master)](https://coveralls.io/r/zostay/AnyEvent-SlackRTM?branch=master)
+[![GitHub issues](https://img.shields.io/github/issues/zostay/AnyEvent-SlackRTM.svg)](https://github.com/zostay/AnyEvent-SlackRTM/issues)
+[![Kwalitee status](https://cpants.cpanauthors.org/dist/AnyEvent-SlackRTM.png)](https://cpants.cpanauthors.org/dist/AnyEvent-SlackRTM)
+[![Coverage Status](https://coveralls.io/repos/zostay/AnyEvent-SlackRTM/badge.svg?branch=master)](https://coveralls.io/r/zostay/AnyEvent-SlackRTM?branch=master)
 
 # NAME
 
