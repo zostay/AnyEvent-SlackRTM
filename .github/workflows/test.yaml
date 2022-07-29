@@ -22,9 +22,9 @@ jobs:
       with:
         perl-version: ${{ matrix.perl }}
     - uses: actions/checkout@v2
-    - run: cpanm --notest --quiet Dist::Zilla Devel::Cover::Report::Coveralls
+    - run: cpanm --notest --quiet Dist::Zilla Devel::Cover::Report::Coveralls || (cat $HOME/.cpanm/work/*/build.log && exit 1)
     - run: dzil authordeps | cpanm --notest --quiet
-    - run: cpanm --notest --quiet Pod::Coverage::TrustPod WebService::Slack::WebApi
+    - run: cpanm --notest --quiet Pod::Coverage::TrustPod WebService::Slack::WebApi || (cat $HOME/.cpanm/work/*/build.log && exit 1)
     - run: dzil listdeps | cpanm --notest --quiet
     - run: dzil test --release --verbose
     - run: cover -test
